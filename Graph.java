@@ -70,7 +70,7 @@ import java.util.Scanner;
         }
     }
 
-    // Método que imprime o grafo vAI TER QUE SER ADPTADO PARA MOSTRAR UM GRAFO E NÃO MATRIZ
+    // Método que imprime o grafo VAI TER QUE SER ADPTADO PARA MOSTRAR UM GRAFO E NÃO MATRIZ
     public void printGraph(int[][] adjMatrix) {
         for (int i = 0; i < adjMatrix.length; i++) {
             for (int j = 0; j < adjMatrix[i].length; j++) {
@@ -80,32 +80,36 @@ import java.util.Scanner;
         }
     }
 
-    // Método que verifica quais leds estão ligados 
-    public void checkLeds(int[][] adjMatrix) {
+    // Método que verifica se algum desligado possui adjacente ligado
+    public boolean hasAdjacent(int[][] adjMatrix, int vertex) {
+        for (int i = 0; i < adjMatrix[vertex].length; i++) {
+            if (adjMatrix[vertex][i] == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void metodo1(int[][] adjMatrix) {
+        // percorre a matriz verificado se algum desligado has adjacent
         for (int i = 0; i < adjMatrix.length; i++) {
-            for (int j = 0; j < adjMatrix[i].length; j++) {
-                if (adjMatrix[i][j] != 0) {
-                    // Aqui vamos chamar o método que verifica os vizinhos
-                    // e influencia os vizinhos
+            if (adjMatrix[i][i] == 0) {
+                if (hasAdjacent(adjMatrix, i)) {
+                    // se tiver, liga o desligado
+                    metodo2(adjMatrix[i][j]);
                 }
             }
         }
     }
 
+    public void metodo2(int[][] adjMatrix, int vertex) {
+        // considera os adjaentes para saber a nova dor do vértice 
+        // O consenso deve ser 80% de virar da cor do mais presente 
+        // ( cor 1 e cor 2, desligado não conta) e 20% de chance de 
+        // permanecer desligado caso ele esteja deligado. 
 
-
-
-    
-
-
-
-    
-    
-
-
-
-
-
+        
+    }
 
 
  }
