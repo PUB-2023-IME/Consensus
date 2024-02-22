@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Graph {
     //Com o intuito de facilitar a interpretação da matriz de adjacência do grafo em questão, consideremos o primeiro vértice como sendo o
@@ -17,6 +18,9 @@ public class Graph {
 
     //Variável que guardará a lista de vértices que contém a cor de cada um dos vértices do grafo em questão.
     public static char[] listaVertices;
+
+    //Variável que determinará a probabilidade de que um dado vértice desligado entre em consenso a cada rodada.
+    public static int probabilidadeConsenso;
 
     public static void populaMatrizAdjacencia(String linha, int i){
         for(int j = 0; j < dimensãoMatriz; j++){
@@ -122,6 +126,9 @@ public class Graph {
         //Crio um objeto do tipo Scanner para ler da entrada padrão.
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Qual é a probabilidade de consenso desejada ? (1 = 10%, 2 = 20%, ... , 10 = 100%)");
+        probabilidadeConsenso = scanner.nextInt();
+
         //Pergunto ao usuário quantos vértices ele deseja colorir.
         System.out.println("Dado que existem " + dimensãoMatriz + " vértices, quantos você deseja colorir ?");
         int numeroVerticesColoridos = scanner.nextInt();
@@ -139,6 +146,8 @@ public class Graph {
             listaVertices[vertice] = cor;
         }
         
+
+
         scanner.close();
     }
 
@@ -146,6 +155,70 @@ public class Graph {
         //Verifica se o vértice i é vizinho do vértice j, isto é, verifica se o vértice i possui uma aresta até o vértice j.
         if(matrizAdjacencia[verticeI][verticeJ] == 1) return true;
         else return false;
+    }
+
+    public static boolean existemDesligados(){
+
+        for(int vertice = 0; vertice < dimensãoMatriz; vertice++){ 
+            //Caso encontre algum vértice com a cor nula 'N', então existe pelo menos um vértice desligado.
+            if(listaVertices[vertice] == 'N') return true;
+        }  
+        //Caso encontre não encontre nenhum vértice com a cor nula 'N', então não existem vértices desligados.
+        return false;
+    }
+
+    public static void procuraDesligados(){
+        for(int vertice = 0; vertice < dimensãoMatriz; vertice++){
+            //Caso encontre algum vértice desligado, ou seja, algum vértice sem cor, então o algoritmo de consenso é rodado nesse vértice.
+            if(listaVertices[vertice] == 'N') consenso(vertice);
+        }
+    }
+
+    public static void consenso(int vertice){
+        int A = 0; int V = 0;
+        for(int i = 0; i < dimensãoMatriz; i++){
+            if(matrizAdjacencia[vertice][i] == 1){
+                //Caso o fluxo de execução chegue até aqui, então o vértice i é vizinho do vértice recebido como parâmetro.
+                if(listaVertices[i] == 'A') A++; //Verifica se a cor do vizinho atual é azul.
+                if(listaVertices[i] == 'V') V++; //Verifica se a cor do vizinho atual é vermelha.
+            }
+        }
+        //Vejo qual das duas cores aparece mais vezes dentre os vizinhos do vértice recebido como parâmetro.
+        char corDominante;
+        if(A > V) corDominante = 'A';
+        else if (A < V) corDominante = 'V';
+        else corDominante = 'N';
+        //Repare que se ocorrer que para um dado vértice os seus vizinhos tenham a mesma quantidade de cores 'A' e 'V', então a cor dominante
+        //será setada como 'N' (cor nula), isto é, sem cor. Ou seja, nada ocorrerá no vértice em questão
+
+        if(corDominante != 'N'){
+            //Cria um objeto do tipo Random.
+            Random random = new Random(); //Poderiamos usar aqui uma semente para gerar os números pseudo-aleatórios se quiséssemos que eles fossem determinísticos. 
+            int numeroSorteado = random.nextInt(10)+1; //Essa variável guardará um número entre 1 e 10.
+            if(numeroSorteado <= probabilidadeConsenso){
+                //Caso o fluxo de execução chegue até aqui, então o vértice recebido como parâmetro terá a sua cor alterada da cor nula para a cor que mais
+                //aparece dentre os seus vizinhos, isto é, a corDominante.
+                listaVertices[vertice] = corDominante;
+            }
+            //Caso o número sorteado seja > 8, isto é 8 < numeroSorteado <= 10. Então não é necessário realizar nenhuma operação, já que a ideia é que,
+            //nesses casos, o vértice permaneça sem cor (Cor == 'N', isto é, nula).
+        }
+    }
+
+    public static int contaRodadasParaConsenso(){
+        int resultado = 0;
+
+        System.out.print("Estado inicial do grafo: ");
+        mostraListaVertices(); //Mostra o estado atual da lista de vértices, ou seja, mostra a cor atual de cada vértice do grafo.
+        System.out.println();
+        while(existemDesligados()){
+            procuraDesligados(); //Procura vértices ainda não coloridos, isto é, desligados, e roda o algoritmo de consenso nesses vértices, caso existam.
+            mostraListaVertices(); //Mostra o estado atual da lista de vértices, ou seja, mostra a cor atual de cada vértice do grafo.
+            System.out.println();
+            resultado++;
+        }
+
+        return resultado;
     }
 
     public static void main(String[] args){
@@ -160,7 +233,8 @@ public class Graph {
         System.out.println();
 
         //mostraMatrizAdjacencia();
-        mostraListaVertices();
+        //mostraListaVertices();
+        System.out.println("Foram necessárias "+contaRodadasParaConsenso()+" rodadas para chegar no consenso");
         
     }
 }
