@@ -54,3 +54,8 @@ O arquivo Graph.txt deve seguir o seguinte formato do arquivo Graph.txt fornecid
 Basicamente, o arquivo Graph.txt contém em sua primeira linha a dimensão N da matriz quadrada que representará a matriz de adjacência do grafo e, nas linhas abaixo, o arquivo em questão contém a matriz de adjacência citada.
 
 O arquivo Graph.txt pode ser mudado conforme a vontade do usuário, desde que se mantenham as configurações citadas acima. Isto é, a matriz de adjacência sempre será uma matriz quadrada e a primeira linha do arquivo Graph.txt sempre deverá conter a dimensão N de tal matriz quadrada.
+
+## Detalhes importantes
+1. A probabilidade de consenso que é pedida pelo algoritmo deve ser um inteiro entre 1 e 10, onde 1 representa 10% e 10 representa 100%.
+2. Os vértices do grafo em questão começam no vértice 0 e vão até o vértice (dimensãoMatriz - 1). Onde dimensãoMatriz é a variável que guarda a dimensão da matriz de adjacência do arquivo Graph.txt.
+3. As cores dos vértices que se deseja colorir devem ser 'V' que representa vermelho ou 'A' que representa azul. 
