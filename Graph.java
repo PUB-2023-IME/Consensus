@@ -128,19 +128,23 @@ public class Graph {
 
         System.out.println("Qual é a probabilidade de consenso desejada ? (1 = 10%, 2 = 20%, ... , 10 = 100%)");
         probabilidadeConsenso = scanner.nextInt();
+        System.out.println();
 
         //Pergunto ao usuário quantos vértices ele deseja colorir.
         System.out.println("Dado que existem " + dimensãoMatriz + " vértices, quantos você deseja colorir ?");
         int numeroVerticesColoridos = scanner.nextInt();
+        System.out.println();
 
         for(int i = 0; i < numeroVerticesColoridos; i++){
             //Pergunto ao usuário qual vértice ele deseja colorir.
             System.out.println("Qual vértice você deseja colorir ?");
             int vertice = scanner.nextInt();
+            System.out.println();
 
             //Pergunto ao usuário qual cor o vértice que ele deseja colorir deverá ter.
             System.out.println("O vértice em questão terá cor vermelha (V) ou cor azul (A) ?");
             char cor = scanner.next().charAt(0);
+            System.out.println();
 
             //Adiciono a cor selecionada ao vértice selecionado.
             listaVertices[vertice] = cor;
@@ -208,9 +212,9 @@ public class Graph {
     public static int contaRodadasParaConsenso(){
         int resultado = 0;
 
-        System.out.print("Estado inicial do grafo: ");
+        System.out.print("Cores iniciais dos vértices do grafo: ");
         mostraListaVertices(); //Mostra o estado atual da lista de vértices, ou seja, mostra a cor atual de cada vértice do grafo.
-        System.out.println();
+        System.out.println("\n");
         while(existemDesligados()){
             procuraDesligados(); //Procura vértices ainda não coloridos, isto é, desligados, e roda o algoritmo de consenso nesses vértices, caso existam.
             mostraListaVertices(); //Mostra o estado atual da lista de vértices, ou seja, mostra a cor atual de cada vértice do grafo.
@@ -226,13 +230,17 @@ public class Graph {
         //Crio a matriz de adjacencia e a lista de vértices baseado no arquivo Graph.txt.
         criaMatrizAdjacencia();
         criaListaVertices();
+        
+
+        System.out.println("\nMatriz de adjacência do grafo: ");
+        mostraMatrizAdjacencia();
 
         //Ativo o modo iterativo para saber quais vértices o usuário quer colorir inicialmente.
         System.out.println();
         ativaModoIterativo();
         System.out.println();
 
-        //mostraMatrizAdjacencia();
+        
         //mostraListaVertices();
         System.out.println("Foram necessárias "+contaRodadasParaConsenso()+" rodadas para chegar no consenso");
         
