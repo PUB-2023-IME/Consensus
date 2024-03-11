@@ -1,0 +1,5 @@
+//Color of the first node
+//Color of the second node
+//Consesus probability
+//Do you want to color other vertices [Y | N]
+//If you want to color other vertices, enter a list of tuples that contains the vertice number and the color that you want to put in this vertices. Ex: [(0,RED),(2,BLUE)]

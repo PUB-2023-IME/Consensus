@@ -1,0 +1,5 @@
+BLUE
+RED
+1
+Y
+[(3,RED),(5,BLUE),(8,RED),(2,RED)]
