@@ -2,6 +2,7 @@ import random
 
 def main():
   
+  # Consenso começa como falso
   consenso = False
 
   # Matriz de adjacencia de um grafo fixo
@@ -19,13 +20,13 @@ def main():
   # Número de vértices do grafo dado
   vertices = len(adj)
 
-  # Lista com todos os vértices desligados
+  # Lista inicial de posiçaõ dos vértices, com todos desligados
   new = consensus(vertices, 0)
 
-  # Quantos leds cada jogador acenderá ao iniciar do jogo
+  # Os usuários definem QUANTOS leds cada jogador acenderá ao iniciar do jogo
   on = initial_light(vertices)
 
-  # Quais leds cada jogador acenderá ao iniciar o jogo
+  # Os usuários definem QUAIS leds cada jogador acenderá ao iniciar o jogo
   old = escolhas(new, on, vertices)
   print(f"Esta é a situação inicial do jogo: {old}")
 
@@ -33,62 +34,90 @@ def main():
   for i in range (0, vertices):
     new[i] = old[i]
 
+  # Estado de consenso de vértices vermelhos
   consensoR = consensus(vertices, "R")
+  # Estado de consenso de vértices azuis
   consensoB = consensus(vertices, "B")
 
+  # Contador de rodadas
   rodada = 0
+
+  # Enquanto não atingir o estado de consenso:
   while consenso == False:
     
-    # print(f"rodada: {rodada}")
-    rodada = rodada + 1
+    print(f"rodada: {rodada}")
+    rodada += 1
 
+    # Saída de controle: para verificação da execução do programa
     print(f"atual: {old}")
-    for i in range (10):
+
+    # Para cada vértice:
+    for i in range (0, vertices):
         
+        # Lista para guardar quais são os vizinhos do led aceso
         vizinhos = []
 
         # Verificar quais vértices estão acesos
         if old[i] != 0:
 
             # Dentre os vértices acesos:
-            for k in range (10):
+            for k in range (0, vertices):
         
                 # Verificar quais são os seus vizinhos
                 if adj[i][k] == 1:
         
                     # Guardar a info de onde estão os vizinhos
                     vizinhos.append(k)
+
+                    # Variáveis para guardar as quantidades de cada estado de led
                     blue = 0
                     red = 0
                     total = 0
-                    rodada = 0
                     
-                    for m in range (10):
+                    # Dentre os vizinhos:
+                    for m in range (0, vertices):
+                        
+                        # Checar o vizinho do vizinho
                         if adj[k][m] == 1:
+                            
+                            # Se for azul
                             if old[m] == "B":
                                 blue += 1
                                 total += 1
+
+                            #Se for vermelho
                             elif old[m] == "R":
                                 red += 1
                                 total += 1
                     
+                    # Probabilidade do led permanecer como está
                     prob_ficar = 0.1
+                    # Probabilidade do led se tornar azul
                     prob_blue = ((1 - prob_ficar)*blue)/total
+                    # Probabilidade do led se tornar vermelho
                     prob_red = ((1 - prob_ficar)*red)/total
-                
+
+                    # Possibilidades do resultado do sorteio
                     possib = ["B","R", 0]
+                    # Sorteio aleatório com pesos para cada possibilidade
                     sorteio = random.choices(possib, weights = (prob_blue, prob_red, prob_ficar))
                 
+                    # Se o resultado do sorteio for azul ou vermelho, o led muda para a cor sorteada e essa info é armazenada na lista new
                     if sorteio[0] == "B" or sorteio[0] == "R":
                         new[k] = sorteio[0]
+                    
+                    # Do contrário (o resultado do sorteio é igual a 0), o led permanece como está e essa info é armazenada na lista new
                     else:
                         new[k] = old[k]
 
+    # As alterações estão em new ao fim da rodada. Old é atualizado com essas informações para que new possa armazenar as informações da próxima rodada 
     for n in range (len(new)):
         old[n] = new[n]
     
+    # Saída de controle: para verificação da execução do programa
     print(f"novo: {new}")
 
+    # As interações são encerradas quando os vértices do grafo atingem um estado de consenso.
     if old == consensoR or old == consensoB:
         consenso = True
 
